@@ -1,7 +1,6 @@
 .DS_Store
 /.venv/
 /*/settings/local.py
-/media/
 /.vagrant/
 Vagrantfile.local
 /docs/_build/

@@ -1,1 +1,1 @@
-web: gunicorn rdx.wsgi --log-file -
+web: gunicorn joint.wsgi --log-file -
