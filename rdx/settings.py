@@ -26,7 +26,7 @@ SECRET_KEY = '&6mr)z9z9iw6cciqyj8vij!$i75r+1ic=o*&tagzjy&c=er55c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['app-joint.herokuapp.com', '*']
+ALLOWED_HOSTS = ['rdx-joint.herokuapp.com', '*']
 
 
 # Application definition
@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'rdx.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ddfq5ogenjavko',
+        'USER': 'anlzrhybylcvmg',
+        'PASSWORD': '8cb6ba4efd60ed198bebe2e31a65f92900d422f77dfb0ce9ed1c3401ffa52f5b',
+        'HOST': 'ec2-54-243-107-66.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
