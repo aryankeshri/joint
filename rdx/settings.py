@@ -27,7 +27,7 @@ SECRET_KEY = '&6mr)z9z9iw6cciqyj8vij!$i75r+1ic=o*&tagzjy&c=er55c'
 DEBUG = True
 
 ALLOWED_HOSTS = ['rdx-joint.herokuapp.com', '*']
-
+AUTH_USER_MODEL = 'accounts.RdxUser'
 
 # Application definition
 
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'imagekit',
     'accounts',
     'events',
 ]
@@ -104,6 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'accounts.validation.MaximumLengthValidator',
     },
 ]
 
