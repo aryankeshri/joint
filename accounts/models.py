@@ -120,13 +120,15 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     new_country_code = models.CharField(max_length=4, default='+91')
     new_iso = models.CharField(max_length=4, default='IN')
     otp = models.CharField(max_length=6, blank=True, null=False)
-    dob = models.DateField(blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=30, blank=True, default='male',
                               choices=GENDER_CHOICE
                               )
     initial_reg = models.BooleanField(default=False)
     final_reg = models.BooleanField(default=False)
     mobile_verify = models.BooleanField(default=False)
+    location = models.CharField(max_length=200, blank=True, null=False)
+    description = models.TextField(blank=True)
 
     objects = UserManager()
 
@@ -161,7 +163,7 @@ class RdxUser(AbstractUser):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=250, default='IN')
+    name = models.CharField(max_length=250, default=None)
     image = ProcessedImageField(upload_to=upload_image,
                                 blank=True, null=True,
                                 validators=[image_extension],
@@ -171,3 +173,30 @@ class Category(models.Model):
                                 )
     modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return self.name
+
+    def icon(self):
+        if self.image != '':
+            return "<img src='{}' width=50px>".format(self.image.url)
+        else:
+            return ''
+    icon.allow_tags = True
+
+
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    sb_name = models.CharField(max_length=250, default=None)
+    modified = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return self.sb_name
+

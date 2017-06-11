@@ -72,3 +72,4 @@ class RdxUserLoginForm(forms.Form):
             if not user.is_active:
                 raise forms.ValidationError("This user is not longer active.")
         return super(RdxUserLoginForm, self).clean(*args, **kwargs)
+
