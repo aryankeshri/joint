@@ -2,6 +2,7 @@ import random
 
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import authenticate
 from rest_framework_jwt.views import jwt_response_payload_handler, JSONWebTokenAPIView
 
 from .models import *
@@ -21,6 +22,7 @@ def generate():
         return value
 
 
+# Category View
 class CategoryAPIViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = (permissions.AllowAny,)
@@ -33,7 +35,19 @@ class CategoryAPIViewSet(viewsets.ModelViewSet):
         }
         return Response(context, status=status.HTTP_200_OK)
 
+    def create(self, request, *args):
+        serializer = CreateCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            context = {
+                'data': serializer.data,
+                'status': status.HTTP_200_OK
+            }
+            return Response(context, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# Sub-Category View
 class SubCategoryAPIViewSet(viewsets.ModelViewSet):
     serializer_class = SubCategorySerializer
     permission_classes = (permissions.AllowAny,)
@@ -45,6 +59,17 @@ class SubCategoryAPIViewSet(viewsets.ModelViewSet):
             'data': serializer.data,
         }
         return Response(context, status=status.HTTP_200_OK)
+
+    def create(self, request, *args):
+        serializer = CreateSubCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            context = {
+                'data': serializer.data,
+                'status': status.HTTP_200_OK
+            }
+            return Response(context, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ExtendedJSONWebTokenAPIView(JSONWebTokenAPIView):
@@ -97,6 +122,17 @@ class NormalUserCreateViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
+        """
+        This method use for signUp
+        :param request: email, username, password, mobile
+        :param args: non
+        :param kwargs: non
+        :return: {"id": 5, "status": 201,
+        "data": {"email": "email@example.com",
+        "username": "username",
+        "mobile": "998876543"}
+        }
+        """
         email = self.request.data['email']
         if email:
             user_qs = RdxUser.objects.filter(email__iexact=email, is_active=True)
@@ -125,6 +161,7 @@ class NormalUserCreateViewSet(viewsets.ModelViewSet):
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Normail user Views
 class NormalUserViewSet(viewsets.ModelViewSet):
     serializer_class = VerifyMobileSerializer
 
@@ -250,6 +287,7 @@ class PasswordOtpAPI(views.APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
+# Reset Password
 class ResetPasswordAPI(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
@@ -296,7 +334,8 @@ class ResetPasswordAPI(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-class FriendProfilePage(viewsets.ViewSet):
+# Other user Profile page
+class OtherProfilePage(viewsets.ViewSet):
 
     def friend_profile(self, request, user=None):
         user = get_object_or_404(RdxUser, id=user, is_active=True, blocked=False)
@@ -314,3 +353,23 @@ class FriendProfilePage(viewsets.ViewSet):
                 'message': 'some error occur.',
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Super admin View
+class SuperAdminApiView(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+
+    def login(self, request):
+        """
+        Super admin Login method
+        :param request: email, password
+        :return: {'next': 1}, {'next': 0}
+        """
+        email = request.data['email']
+        password = request.data['password']
+        user = authenticate(username=email, password=password)
+        if user is not None and user.is_superuser:
+            return Response({'next': 1}, status=status.HTTP_200_OK)
+        else:
+            return Response({'next': 0}, status=status.HTTP_400_BAD_REQUEST)
+

@@ -58,8 +58,26 @@ class CategorySerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class CreateCategorySerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
+        read_only_fields = ('id',)
+
+
 class SubCategorySerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+
+    class Meta:
+        model = SubCategory
+        fields = ('id', 'category', 'sb_name')
+        read_only_fields = ('id',)
+
+
+class CreateSubCategorySerializer(serializers.ModelSerializer):
+    sb_name = serializers.CharField(required=True)
 
     class Meta:
         model = SubCategory

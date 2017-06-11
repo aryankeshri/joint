@@ -5,8 +5,12 @@ from .views import *
 urlpatterns = [
     url(r'^category/list/$', CategoryAPIViewSet.as_view({'get': 'list', }),
         name='category_list'),
+    url(r'^category/create/$', CategoryAPIViewSet.as_view({'post': 'create', }),
+        name='post_create'),
     url(r'^subcategory/list/$', SubCategoryAPIViewSet.as_view({'get': 'list', }),
         name='sub_category_list'),
+    url(r'^subcategory/create/$', SubCategoryAPIViewSet.as_view({'post': 'create', }),
+        name='post_create'),
     url(r'^app/login/', obtain_jwt_token),
     url(r'^app/signup/$', NormalUserCreateViewSet.as_view({'post': 'create', }),
         name='normal_user_create'),
@@ -28,6 +32,7 @@ urlpatterns = [
         name='profile'),
     url(r'^app/post/', include('events.urls')),
     url(r'^app/(?P<user>[0-9]+)/profile/$',
-        FriendProfilePage.as_view({'get': 'friend_profile'}),
+        OtherProfilePage.as_view({'get': 'friend_profile'}),
         name='friend_profile'),
+    url(r'^login/$', SuperAdminApiView.as_view({'post': 'login', }), name='super_login'),
 ]
