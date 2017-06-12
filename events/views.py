@@ -31,7 +31,8 @@ class PostAPIViewSet(viewsets.ModelViewSet):
             return Response(context, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post_detail(self, request, pk=None, *args, **kwargs):
+    def post_detail(self, request, *args, **kwargs):
+        pk = request.data['id']
         p_obj = get_object_or_404(Post, id=pk, p_active=True)
         serializer = PostDetailSerializer(p_obj, many=False)
         if p_obj:

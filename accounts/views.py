@@ -225,6 +225,7 @@ class NormalUserViewSet(viewsets.ModelViewSet):
     def update_profile(self, request):
         user = get_object_or_404(RdxUser, id=request.user.id)
         new_mobile = request.data['mobile']
+        otp = 000000
         if user.mobile != new_mobile:
             otp = generate()
             user.otp = otp
@@ -239,7 +240,7 @@ class NormalUserViewSet(viewsets.ModelViewSet):
             serializer.save()
         context = {
             'data': serializer.data,
-            'otp': otp if otp else '',
+            'otp': otp,
             'status': status.HTTP_200_OK
         }
         return Response(context, status=status.HTTP_200_OK)
@@ -337,8 +338,9 @@ class ResetPasswordAPI(viewsets.ModelViewSet):
 # Other user Profile page
 class OtherProfilePage(viewsets.ViewSet):
 
-    def friend_profile(self, request, user=None):
-        user = get_object_or_404(RdxUser, id=user, is_active=True, blocked=False)
+    def friend_profile(self, request):
+        user = get_object_or_404(RdxUser, id=request.data['id'],
+                                 is_active=True, blocked=False)
         if user:
             serializer = ProfileSerializer(user)
             context = {

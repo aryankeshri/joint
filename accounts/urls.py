@@ -31,8 +31,8 @@ urlpatterns = [
     url(r'^app/update/profile/$', NormalUserViewSet.as_view({'post': 'update_profile', }),
         name='profile'),
     url(r'^app/post/', include('events.urls')),
-    url(r'^app/(?P<user>[0-9]+)/profile/$',
-        OtherProfilePage.as_view({'get': 'friend_profile'}),
+    url(r'^app/user/profile/$',
+        OtherProfilePage.as_view({'post': 'friend_profile'}),
         name='friend_profile'),
     url(r'^login/$', SuperAdminApiView.as_view({'post': 'login', }), name='super_login'),
 ]

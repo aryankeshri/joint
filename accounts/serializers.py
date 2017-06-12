@@ -115,7 +115,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RdxUser
-        fields = ('id', 'image', 'mobile', 'username', 'email', 'gender', 'age',
+        fields = ('id', 'image', 'mobile', 'username', 'gender', 'age',
                   'location', 'description')
         read_only_fields = ('id',)
 
